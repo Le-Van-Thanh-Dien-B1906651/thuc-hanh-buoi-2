@@ -32,7 +32,7 @@ exports.findAllFavorite = (req, res) => {
 
 //Create and Save a new Contact
 exports.create = async(req, res, next) => {
-    if (!req.body ? .name) {
+    if (!req.body?.name) {
         return next(new ApiError(400, "Name can not be empty"));
     }
 
@@ -128,6 +128,20 @@ exports.findAllFavorite = async(req, res, next) => {
     } catch (error) {
         return next(
             new ApiError(500, "An error occurred while retrieving favorite contacts")
+        );
+    }
+}
+
+exports.deleteAll = async(_req, res, next) => {
+    try {
+        const contactService = new ContactService(MongoDB.client);
+        const documents = await contactService.findFavorite();
+        return res.send({
+            message: `${deletedCount} contacts were deleted successfully`,
+        });
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error occurred while removing all contacts")
         );
     }
 }
